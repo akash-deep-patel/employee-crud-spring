@@ -1,4 +1,4 @@
-package com.webforest.webforest;
+package com.webforest.controller;
 
 import java.util.List;
 
@@ -8,11 +8,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.webforest.entity.EmployeeEntity;
+import com.webforest.service.EmployeeService;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
+@RequestMapping("/api/v1")
 public class EmpController {
     private final EmployeeService employeeService;
 
@@ -26,19 +32,19 @@ public class EmpController {
     }
 
     @GetMapping("/employees")
-    public List<Employee> getEmployees() {
+    public List<EmployeeEntity> getEmployees() {
         
         return employeeService.getEmployees();
     }
     
     @GetMapping("/employees/{id}")
-    public Employee getEmployeeById(@PathVariable Long id) {
+    public EmployeeEntity getEmployeeById(@PathVariable Long id) {
         // Implement logic to retrieve employee by ID
         return employeeService.getEmployeeById(id);
     }
 
     @PostMapping("/employees")
-    public String addEmployee(@RequestBody Employee emp) {
+    public String addEmployee(@RequestBody EmployeeEntity emp) {
         try{
             // Validate request body
             if (emp == null) {
@@ -72,7 +78,7 @@ public class EmpController {
     }
    
     @PutMapping("/employees/{id}")
-    public String updateEmployee(@PathVariable Long id, @RequestBody Employee emp) {
+    public String updateEmployee(@PathVariable Long id, @RequestBody EmployeeEntity emp) {
         return employeeService.updateEmployee(id, emp);
     }
 

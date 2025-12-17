@@ -1,8 +1,8 @@
-package com.webforest.webforest.services;
+package com.webforest.service;
 
 import java.util.List;
 
-import com.webforest.Entity.EmployeeEntity;
+import com.webforest.entity.EmployeeEntity;
 
 public interface EmployeeService {
     String addEmployee(EmployeeEntity emp);

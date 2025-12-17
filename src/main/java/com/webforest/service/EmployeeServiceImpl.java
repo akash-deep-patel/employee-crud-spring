@@ -1,19 +1,16 @@
-package com.webforest.webforest.services;
+package com.webforest.service;
 
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
-import com.webforest.Entity.EmployeeEntity;
+import com.webforest.entity.EmployeeEntity;
 import com.webforest.repository.EmployeeRepository;
-import com.webforest.webforest.services.EmployeeService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-    @Autowired
     private final EmployeeRepository employeeRepository;
 
     public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
@@ -49,6 +46,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
     }
 
+    @Override
     public EmployeeEntity getEmployeeById(Long id) {
         try {
             Optional<EmployeeEntity> employee = employeeRepository.findById(id);
@@ -113,4 +111,3 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
     }
 }
-
