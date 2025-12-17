@@ -43,20 +43,37 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
     }
 
-    @Override
-    public String updateEmployee(Employee emp) {
+    public Employee getEmployeeById(Long id) {
         try {
-            if (emp.getId() == null) {
+            Optional<Employee> employee = employeeRepository.findById(id);
+            if (employee.isPresent()) {
+                System.out.println("Employee found with ID: " + id);
+                return employee.get();
+            } else {
+                System.out.println("Employee not found with ID: " + id);
+                return null;
+            }
+        } catch (Exception e) {
+            System.err.println("Error retrieving employee by ID: " + e.getMessage());
+            throw new RuntimeException("Failed to retrieve employee by ID: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public String updateEmployee(Long id, Employee emp) {
+        try {
+            if (id == null) {
                 return "Employee ID is required for update";
             }
-            Optional<Employee> existingEmployee = employeeRepository.findById(emp.getId());
+            Optional<Employee> existingEmployee = employeeRepository.findById(id);
             if (existingEmployee.isPresent()) {
                 // Preserve the version from the existing employee
                 emp.setVersion(existingEmployee.get().getVersion());
                 System.out.println("Updating employee with version: " + emp.getVersion());
+                emp.setId(id);
                 employeeRepository.save(emp);
                 //check the version of saved employee
-                Optional<Employee> updatedEmployee = employeeRepository.findById(emp.getId());
+                Optional<Employee> updatedEmployee = employeeRepository.findById(id);
                 System.out.println("Employee updated: " + updatedEmployee.get().getVersion());
                 return "Employee updated successfully";
             }
