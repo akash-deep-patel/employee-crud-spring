@@ -1,13 +1,19 @@
-package com.webforest.webforest;
+package com.webforest.webforest.services;
 
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+
+import com.webforest.Entity.EmployeeEntity;
+import com.webforest.repository.EmployeeRepository;
+import com.webforest.webforest.services.EmployeeService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-
+    @Autowired
     private final EmployeeRepository employeeRepository;
 
     public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
@@ -15,12 +21,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public String addEmployee(Employee emp) {
+    public String addEmployee(EmployeeEntity emp) {
         try {
             System.out.println("Adding employee: " + emp.getName() + ", " + emp.getAge() + ", " + emp.getDepartment());
             // Set version to null to ensure it's treated as a new entity
             emp.setVersion(null);
-            Employee savedEmployee = employeeRepository.save(emp);
+            EmployeeEntity savedEmployee = employeeRepository.save(emp);
             return "Employee added successfully with ID: " + savedEmployee.getId();
         } catch (ObjectOptimisticLockingFailureException e) {
             System.err.println("Optimistic locking failure: " + e.getMessage());
@@ -32,9 +38,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<Employee> getEmployees() {
+    public List<EmployeeEntity> getEmployees() {
         try {
-            List<Employee> employees = employeeRepository.findAll();
+            List<EmployeeEntity> employees = employeeRepository.findAll();
             System.out.println("Retrieving all employees: " + employees.size() + " records");
             return employees;
         } catch (Exception e) {
@@ -43,9 +49,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
     }
 
-    public Employee getEmployeeById(Long id) {
+    public EmployeeEntity getEmployeeById(Long id) {
         try {
-            Optional<Employee> employee = employeeRepository.findById(id);
+            Optional<EmployeeEntity> employee = employeeRepository.findById(id);
             if (employee.isPresent()) {
                 System.out.println("Employee found with ID: " + id);
                 return employee.get();
@@ -60,12 +66,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public String updateEmployee(Long id, Employee emp) {
+    public String updateEmployee(Long id, EmployeeEntity emp) {
         try {
             if (id == null) {
                 return "Employee ID is required for update";
             }
-            Optional<Employee> existingEmployee = employeeRepository.findById(id);
+            Optional<EmployeeEntity> existingEmployee = employeeRepository.findById(id);
             if (existingEmployee.isPresent()) {
                 // Preserve the version from the existing employee
                 emp.setVersion(existingEmployee.get().getVersion());
@@ -73,7 +79,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 emp.setId(id);
                 employeeRepository.save(emp);
                 //check the version of saved employee
-                Optional<Employee> updatedEmployee = employeeRepository.findById(id);
+                Optional<EmployeeEntity> updatedEmployee = employeeRepository.findById(id);
                 System.out.println("Employee updated: " + updatedEmployee.get().getVersion());
                 return "Employee updated successfully";
             }
